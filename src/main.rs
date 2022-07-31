@@ -36,8 +36,19 @@ fn view(app: &App, model: &Model, frame: Frame) {
         let x = i as f64;
         let scale = 0.01;
         let time = app.elapsed_frames() as f64 * scale;
-        let y = model.noise.get([x * scale + time, 0.0]);
-        let y = map_range(y, -1.0, 1.0, bounds.bottom(), bounds.top());
+        let xoff = x * scale + time;
+
+        let nf = 50.0;
+        let n = map_range(model.noise.get([xoff, 0.0]), -1.0, 1.0, -nf, nf);
+        let s = map_range(
+            xoff.sin(),
+            -1.0,
+            1.0,
+            bounds.bottom() + nf,
+            bounds.top() - nf,
+        );
+
+        let y = n + s;
         pt2(x as f32, y as f32)
     });
 
